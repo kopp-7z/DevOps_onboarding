@@ -47,6 +47,7 @@ Moje myšlienky pri spracovaní tasku:
    Ďalší debbuging bol kvôli nesprávnemu setovaniu hostov, najskôr som mal localhosta, zmenil som na myhosts ako v inventory.ini.
    Verzia Ubuntu bola deprecated. 
 
+   posledná aktualizácia playbooku bola celá inštalácia dockera. na to som zobral  command z https://docs.docker.com/engine/install/ubuntu/ a prepísal ho do yaml.
 5. Spustenie a deployment 
 
 1. Clone z tohoto githubu 
