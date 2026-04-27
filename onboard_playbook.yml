@@ -1,0 +1,62 @@
+---
+
+- name: install docker and docker-compose
+  hosts: myhosts
+  become: true
+  tasks:
+    - name: Install prerequistites 
+      apt:
+        name:
+          - ca-certificates
+          - curl
+        state: present
+        update_cache: true
+
+    - name: install 
+      file:
+        path: /etc/apt/keyrings
+        state: directory 
+        mode: '755'
+    - name: get url
+      get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: '0644'
+    - name: copy docker.sources      
+      copy:
+        dest: /etc/apt/sources.list.d/docker.list
+        content: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu noble stable"
+        mode: '0644'
+    - name: Install Docker and Docker Compose
+      apt:
+        name: 
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+        update_cache: true
+    - name: create onboarding directory
+      file:
+        path: /home/onboarding
+        state: directory
+        mode: '0755'
+    - name: Copy nginx.conf to onboarding directory
+      copy:
+        src: nginx.conf
+        dest: /home/onboarding/nginx.conf
+        mode: '0644'
+    - name: Copy docker-compose.yml to onboarding directory
+      copy:
+        src: docker-compose.yml
+        dest: /home/onboarding/docker-compose.yml
+        mode: '0644'
+    - name: Start Docker Compose services
+      #shell: docker compose -f /home/onboarding/docker-compose.yml up -d
+      community.docker.docker_compose_v2:
+        project_src: /home/onboarding
+        state: present
+
+
+
